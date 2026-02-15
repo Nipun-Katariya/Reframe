@@ -1,6 +1,7 @@
 package com.reframe;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
@@ -19,7 +20,7 @@ public class Bridge {
      */
     public void processVideo(String videoPath) throws IOException, InterruptedException {
         // Get the absolute path to the Python script
-        String pythonScript = System.getProperty("user.dir") + "/engine/reframe_core.py";
+        String pythonScript = System.getProperty("user.dir") + File.separator + "engine" + File.separator + "reframe_core.py";
         
         // Build the process
         ProcessBuilder processBuilder = new ProcessBuilder("python3", pythonScript, videoPath);
@@ -70,7 +71,12 @@ public class Bridge {
         Bridge bridge = new Bridge();
         try {
             bridge.processVideo(args[0]);
-        } catch (IOException | InterruptedException e) {
+        } catch (InterruptedException e) {
+            System.err.println("Error processing video: " + e.getMessage());
+            e.printStackTrace();
+            Thread.currentThread().interrupt();
+            System.exit(1);
+        } catch (IOException e) {
             System.err.println("Error processing video: " + e.getMessage());
             e.printStackTrace();
             System.exit(1);
